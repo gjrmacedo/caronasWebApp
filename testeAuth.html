@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Basic Facebook Login</title>
+ 
+<script>
+ 
+// funcao sera chamada quando usuario finalizar o processo executado
+// pelo botao de Login
+function checkLoginState()
+{
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+            // usuario logado no facebook e com o app aceito
+ 
+        } else if (response.status === 'not_authorized') {
+            // Usuario logado no facebook, mas nao aceitou o App
+        } else {
+            // Usuario nao logado no facebook
+        }
+    });
+}
+</script>
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1524561077858163',
+      xfbml      : true,
+      version    : 'v2.5'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+   
+   function teste() {
+		FB.api('/me', function(response) {
+			alert("ID: "+response.id);
+			var img_link = "http://graph.facebook.com/"+response.id+"/picture"
+		});
+   }
+</script>
+
+</head>
+ 
+<body>
+ <div
+  class="fb-like"
+  data-share="true"
+  data-width="450"
+  data-show-faces="true">
+</div>
+
+<button onclick="teste();">ID DO USUÁRIOS</button>
+ 
+</body>
+</html>

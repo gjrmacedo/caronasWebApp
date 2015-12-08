@@ -1,0 +1,164 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<link rel="stylesheet" href="Libs/bootstrap/dist/css//bootstrap.min.css">
+	<link rel="stylesheet" href="Libs/bootstrap/dist/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="Libs/font-awesome/css/font-awesome.min.css">
+	<style>
+		* {
+			font-family: 'Calibri';
+		}
+		.wrapper {
+			margin-top: 80px;
+			margin-bottom: 20px;
+		}
+		.form-signin {
+			max-width: 420px;
+			padding: 30px 38px 66px;
+			margin: 0 auto;
+			background-color: #eee;
+			border: 3px double rgba(0, 0, 0, 0.1);
+		}
+		.form-signin-heading {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+		.form-control {
+			position: relative;
+			font-size: 16px;
+			height: auto;
+			padding: 10px;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="row">
+		<div class="col-md-5 col-md-offset-3">
+			<form class="form-horizontal" role="form">
+				<fieldset>
+
+					<legend>Cadastro - Caronas ;)</legend>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="nome">Nome</label>
+						<div class="col-sm-10">
+							<input type="text" id="nome" placeholder="Nome" class="form-control">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="cidade">Endereço Origem</label>
+						<div class="col-sm-10">
+							<input type="text" id="origem" placeholder="Endereço Origem" class="form-control" data-bind="value:$root.Carona.EnderecoOrigem">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="partida">Horário Partida</label>
+						<div class="col-sm-6">
+							<input type="text" id="partida" placeholder="Horário Partida" class="form-control">
+						</div>
+
+						<label class="col-sm-2 control-label" for="vagas">Nr. Vagas</label>
+						<div class="col-sm-2">
+							<input type="text" id="vagas" placeholder="Nr. Vagas" class="form-control" data-bind="value:$root.Carona.NrVagas">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="bairro">Bairro</label>
+						<div class="col-sm-4">
+							<input type="text" id="bairro" placeholder="Bairro" class="form-control">
+						</div>
+
+						<label class="col-sm-2 control-label" for="cep">CEP</label>
+						<div class="col-sm-4">
+							<input type="text" id="cep" placeholder="CEP" class="form-control">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="email">E-mail</label>
+						<div class="col-sm-10">
+							<input type="text" id="email" placeholder="E-mail" class="form-control">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="bairro">Tel. Residencial</label>
+						<div class="col-sm-4">
+							<input type="text" id="telefone" placeholder="Tel. Residencial" class="form-control">
+						</div>
+
+						<label class="col-sm-2 control-label" for="celular">Tel. Celular</label>
+						<div class="col-sm-4">
+							<input type="text" id="celular" placeholder="Celular" class="form-control">
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<div class="pull-right">
+								<button type="button" class="btn btn-default">Cancelar</button>
+								<button type="button" class="btn btn-primary" data-bind="click: $root.adicionarCarona">Salvar</button>
+							</div>
+						</div>
+					</div>
+
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	
+	<script src="Libs/jquery/jquery-1.11.3.min.js"></script>
+	<script src="Libs/knockout/knockout-3.3.0.js"></script>
+	<script src="Libs/knockout/knockout-mapping.js"></script>
+	<script>
+		// Defino o "Model" correspondente aos campos da tela;
+		var CaronaModel = function () {
+			this.EnderecoOrigem = ko.observable("");
+			this.NrVagas = ko.observable("");
+		};
+	
+		// Defino o ViewModel da página, ou seja, o mecanismo que vai relacionar minha View "cadastro.html" com o meu Model "CaronaModel";
+		var CaronaViewModel = function () {
+			var self = this;
+			self.Carona = new CaronaModel();
+			
+			// Consome a API via GET (busca tudo sem where nenhum)
+			self.buscarTodos = function() {
+				return $.getJSON("http://localhost:85/caronasWebApp/API/carona");
+				// Utilização: console.log(self.buscarTodos().success(function (data) { console.log(data);}));
+			}					
+			
+			// Consome a API via PUT (Altera um registro de determinado ID)
+			self.alterarCarona = function() {
+				$.ajax({
+					url: 'http://localhost:85/caronasWebApp/API/carona',
+					type: 'PUT',
+					data : ko.mapping.toJSON(self.Carona),
+					success: function(result) {
+						console.log("atualiou");
+					}
+				});
+			};
+			
+			// Consome a API via POST (Insere novo registro);
+			self.adicionarCarona = function() {
+				$.post("http://localhost:85/caronasWebApp/API/carona", ko.mapping.toJSON(self.Carona));
+			};
+			
+		};
+	
+		var objCaronaViewModel = new CaronaViewModel();
+		ko.mapping.fromJS(objCaronaViewModel, {}, objCaronaViewModel);
+		ko.applyBindings(objCaronaViewModel);
+					
+	</script>
+</body>
+
+</html>
